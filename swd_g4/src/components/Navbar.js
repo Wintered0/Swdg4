@@ -8,13 +8,9 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <NavLink to="/" end>Home</NavLink>
-      <NavLink to="/login">Login</NavLink>
+      <NavLink to="/about">About</NavLink>
       <NavLink to="/contact">Contact</NavLink>
-
-      {/* Chỉ hiển thị nếu role là Admin */}
-      {role === "Admin" && (
-        <NavLink to="/users">Management Account</NavLink>
-      )}
+      <NavLink to="/users">Management Account</NavLink> 
     </nav>
   );
 }
