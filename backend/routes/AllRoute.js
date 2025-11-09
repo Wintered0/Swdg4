@@ -7,6 +7,11 @@ const transactionController = require("../controllers/BorrowTransactionControlle
 const inventoryController = require("../controllers/InventoryController");
 
 // User routes
+const login = require("../controllers/authController");
+
+
+
+// Quản lí acc
 router.get("/users/:id", userController.getUserById);
 router.get("/users", userController.getUsers);
 router.post("/users", userController.createUser);
@@ -34,5 +39,7 @@ router.get("/inventory", inventoryController.getInventory);
 router.put("/inventory/:id", inventoryController.updateInventory);
 router.get("/inventory/alerts", inventoryController.getLowStockAlerts);
 router.get("/inventory/report", inventoryController.generateInventoryReport);
+// ---
+router.post("/login", login.login);
 
 module.exports = router;

@@ -12,6 +12,10 @@
   margin-bottom: 16px;
 }
 
+.user-form label {
+  font-weight: bold;
+}
+
 .user-form input,
 .user-form select {
   padding: 8px;
@@ -27,3 +31,9 @@
   border-radius: 4px;
   cursor: pointer;
 }
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+

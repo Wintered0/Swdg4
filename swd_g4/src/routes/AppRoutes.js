@@ -6,11 +6,6 @@ import About from "../pages/About";
 import Contact from "../pages/Contact";
 import UserList from "../pages/UserList";
 import UserForm from "../pages/UserForm";
-import BookList from "../pages/BookList";
-import BookForm from "../pages/BookForm";
-import BorrowHistory from "../pages/BorrowHistory";
-import InventoryManagement from "../pages/InventoryManagement";
-
 export default function AppRoutes() {
   return (
     <MainLayout>
@@ -18,8 +13,8 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-
-        {/* Quản lý tài khoản */}
+        {/* Quản lí tài khoản*/}
+        <Route path="/" element={<Home />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/users/new" element={<UserForm />} />
         <Route path="/users/edit/:id" element={<UserForm />} />
