@@ -1,17 +1,21 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const cors = require("cors");
+const userRoutes = require("./routes/AllRoute");
 
-dotenv.config(); // Load biến môi trường từ .env
-
-connectDB(); // Kết nối MongoDB
-
+dotenv.config();
 const app = express();
+connectDB();
+
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Server is running and connected to MongoDB Atlas");
 });
+
+app.use("/api", userRoutes);
 
 const PORT = process.env.PORT || 9999;
 app.listen(PORT, () => {
