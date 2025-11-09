@@ -21,7 +21,7 @@ export default function InventoryManagement() {
   useEffect(() => {
     loadInventory();
     loadAlerts();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadInventory = async () => {
     try {
@@ -63,14 +63,29 @@ export default function InventoryManagement() {
   };
 
   const handleSaveEdit = async () => {
+    // Validate input
+    if (editForm.quantity < 0) {
+      alert("Số lượng không thể âm");
+      return;
+    }
+
+    // Confirmation dialog
+    const confirmUpdate = window.confirm(`Bạn có chắc muốn cập nhật kho cho sách "${inventory.find(b => b._id === editingBook)?.title}"?\n\nSố lượng mới: ${editForm.quantity}\nTình trạng: ${editForm.condition}\nGhi chú: ${editForm.remarks || 'Không có'}`);
+
+    if (!confirmUpdate) {
+      return;
+    }
+
     try {
       await updateInventory(editingBook, editForm);
       setEditingBook(null);
       loadInventory();
       loadAlerts();
+      // Log update operation
+      console.log("Inventory updated for book:", editingBook, "with data:", editForm);
     } catch (err) {
       console.error("Lỗi khi cập nhật kho:", err);
-      alert("Không thể cập nhật kho");
+      alert("Không thể cập nhật kho. Vui lòng thử lại.");
     }
   };
 
@@ -78,8 +93,89 @@ export default function InventoryManagement() {
     try {
       const res = await generateInventoryReport();
       setReport(res.data);
+      // Log report generation
+      console.log("Inventory report generated:", res.data);
     } catch (err) {
       console.error("Lỗi khi tạo báo cáo:", err);
+      alert("Không thể tạo báo cáo. Vui lòng thử lại.");
+    }
+  };
+
+  const handleExportReport = (format = 'pdf') => {
+    if (!report) {
+      alert("Vui lòng tạo báo cáo trước khi xuất.");
+      return;
+    }
+
+    try {
+      if (format === 'pdf') {
+        const printWindow = window.open('', '_blank');
+        const html = `
+          <html>
+            <head>
+              <title>Báo cáo Kho Sách</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h2 { color: #333; }
+                .summary { background-color: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 5px; }
+                table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+                .footer { margin-top: 30px; font-size: 12px; color: #666; }
+              </style>
+            </head>
+            <body>
+              <h2>Báo cáo Kho Sách</h2>
+              <div class="summary">
+                <p><strong>Tổng số sách:</strong> ${report.totalBooks}</p>
+                <p><strong>Sách có sẵn:</strong> ${report.availableBooks}</p>
+                <p><strong>Sách kho thấp:</strong> ${report.lowStockBooks}</p>
+                <p><strong>Ngày tạo:</strong> ${new Date(report.generatedAt).toLocaleString('vi-VN')}</p>
+              </div>
+              <h3>Chi tiết sách kho thấp:</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tiêu đề</th>
+                    <th>Tác giả</th>
+                    <th>Số lượng hiện tại</th>
+                    <th>Vị trí</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${inventory.filter(book => book.quantity <= 5).map(book => `
+                    <tr>
+                      <td>${book.title}</td>
+                      <td>${book.author}</td>
+                      <td>${book.quantity}</td>
+                      <td>${book.location}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              <div class="footer">
+                Báo cáo được tạo bởi hệ thống quản lý thư viện vào ${new Date().toLocaleString('vi-VN')}
+              </div>
+            </body>
+          </html>
+        `;
+        printWindow.document.write(html);
+        printWindow.document.close();
+        printWindow.print();
+      } else if (format === 'csv') {
+        const csv = inventory.map(book =>
+          `${book.title},${book.author},${book.category},${book.quantity},${book.condition},${book.location},${book.remarks || ''}`
+        ).join('\n');
+        const blob = new Blob([`Tiêu đề,Tác giả,Thể loại,Số lượng,Tình trạng,Vị trí,Ghi chú\n${csv}`], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'inventory_report.csv';
+        a.click();
+      }
+    } catch (err) {
+      console.error("Lỗi khi xuất báo cáo:", err);
+      alert("Không thể xuất báo cáo. Vui lòng thử lại.");
     }
   };
 
@@ -112,6 +208,8 @@ export default function InventoryManagement() {
           </select>
           <button onClick={handleSearch}>Lọc</button>
           <button onClick={handleGenerateReport}>Tạo báo cáo</button>
+          <button onClick={() => handleExportReport('pdf')}>Xuất PDF</button>
+          <button onClick={() => handleExportReport('csv')}>Xuất CSV</button>
         </div>
       </div>
 
