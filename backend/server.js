@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const cors = require("cors");
 const userRoutes = require("./routes/AllRoute");
 
+const bookRoutes = require("./routes/BookRoute");
 dotenv.config();
 const app = express();
 connectDB();
@@ -16,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", userRoutes);
-
+app.use("/api/books", bookRoutes);
 const PORT = process.env.PORT || 9999;
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
