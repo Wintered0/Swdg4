@@ -6,6 +6,7 @@ import About from "../pages/About";
 import Contact from "../pages/Contact";
 import UserList from "../pages/UserList";
 import UserForm from "../pages/UserForm";
+import Login from "../pages/LoginForm";
 export default function AppRoutes() {
   return (
     <MainLayout>
@@ -13,6 +14,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
         {/* Quản lí tài khoản*/}
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<UserList />} />
