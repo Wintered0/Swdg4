@@ -11,6 +11,8 @@ import BookList from "../pages/BookList";
 import BookForm from "../pages/BookForm";
 import BorrowHistory from "../pages/BorrowHistory";
 import InventoryManagement from "../pages/InventoryManagement";
+import BorrowBook from "../pages/BorrowBook";
+import ReturnBook from "../pages/ReturnBook";
 
 export default function AppRoutes() {
   return (
@@ -31,6 +33,11 @@ export default function AppRoutes() {
         <Route path="/books/new" element={<BookForm />} />
         <Route path="/books/edit/:id" element={<BookForm />} />
         <Route path="/catalogs" element={<BookCatalog />} />
+
+        {/* Mượn + trả sách */}
+        <Route path="/borrow" element={<BorrowBook />} />
+        <Route path="/return" element={<ReturnBook />} />
+
         {/* Lịch sử mượn/trả (UC-07) */}
         <Route path="/borrow-history" element={<BorrowHistory />} />
 

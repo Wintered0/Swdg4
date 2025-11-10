@@ -5,6 +5,8 @@ const userController = require("../controllers/ManagementAccount");
 const bookController = require("../controllers/BookController");
 const transactionController = require("../controllers/BorrowTransactionController");
 const inventoryController = require("../controllers/InventoryController");
+const borrowController = require('../controllers/BorrowBookController');
+const returnController = require('../controllers/ReturnBookController');
 
 // User routes
 const login = require("../controllers/authController");
@@ -30,6 +32,10 @@ router.get("/transactions/:id", transactionController.getTransactionById);
 router.get("/transactions", transactionController.getTransactions);
 router.post("/transactions", transactionController.createTransaction);
 router.put("/transactions/return", transactionController.returnBook);
+
+//UC3+UC4
+router.post('/borrow', borrowController.borrowBook);
+router.post('/return', returnController.returnBook);
 
 // Borrow/Return History (UC-07)
 router.get("/borrow-history", transactionController.getBorrowHistory);

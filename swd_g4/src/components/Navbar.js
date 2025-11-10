@@ -14,7 +14,9 @@ export default function Navbar() {
       <NavLink to="/contact">Contact</NavLink>
       <NavLink to="/users">Management Account</NavLink>
       <NavLink to="/catalogs">View Catalog</NavLink>
-      <NavLink to="/books">Books</NavLink>
+      <NavLink to="/borrow">Borrow Book (UC-03)</NavLink>
+      <NavLink to="/return">Return Book (UC_04)</NavLink>
+
       <NavLink to="/borrow-history">Borrow History (UC-07)</NavLink>
       <NavLink to="/inventory">Inventory (UC-08)</NavLink>
     </nav>
