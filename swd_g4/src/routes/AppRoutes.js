@@ -12,6 +12,8 @@ import BookForm from "../pages/BookForm";
 import BorrowHistory from "../pages/BorrowHistory";
 import InventoryManagement from "../pages/InventoryManagement";
 import Login from "../pages/LoginForm";
+import AccessControl from "../pages/AccessControl";
+
 export default function AppRoutes() {
   return (
     <MainLayout>
@@ -37,6 +39,9 @@ export default function AppRoutes() {
 
         {/* Quản lý kho (UC-08) */}
         <Route path="/inventory" element={<InventoryManagement />} />
+
+         {/* Kiểm soát truy cập RFID (UC-10) */}
+        <Route path="/access-control" element={<AccessControl />} />
       </Routes>
     </MainLayout>
   );

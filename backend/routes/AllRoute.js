@@ -5,6 +5,7 @@ const userController = require("../controllers/ManagementAccount");
 const bookController = require("../controllers/BookController");
 const transactionController = require("../controllers/BorrowTransactionController");
 const inventoryController = require("../controllers/InventoryController");
+const accessController = require("../controllers/AccessController");
 
 // User routes
 const login = require("../controllers/authController");
@@ -41,5 +42,12 @@ router.get("/inventory/alerts", inventoryController.getLowStockAlerts);
 router.get("/inventory/report", inventoryController.generateInventoryReport);
 // ---
 router.post("/login", login.login);
+
+
+//Manage Access Control (UC-10)
+router.post("/access/scan", accessController.scanRFID);
+router.post("/access/validate", accessController.validateRFID);
+router.post("/access/check-status", accessController.checkBorrowStatus);
+router.post("/access/set", accessController.setAccess);
 
 module.exports = router;
