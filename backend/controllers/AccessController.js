@@ -184,10 +184,3 @@ exports.setAccess = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-module.exports = {
-  scanRFID,
-  validateRFID,
-  checkBorrowStatus,
-  setAccess
-};
