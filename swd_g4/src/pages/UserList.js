@@ -12,11 +12,20 @@ export default function UserList() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xoá người dùng này?")) {
+  if (window.confirm("Bạn có chắc muốn xoá người dùng này?")) {
+    try {
       await deleteUser(id);
       setUsers(users.filter((u) => u._id !== id));
+      alert("Xoá user thành công.");
+    } catch (err) {
+      // Nếu backend trả về error message thì hiển thị
+      const msg = err.response?.data?.error || "Không thể xoá người dùng.";
+      alert(msg);
     }
-  };
+  }
+};
+
+  
 
   return (
     <div className="container">
