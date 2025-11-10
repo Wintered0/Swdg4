@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { getBooks } from "../services/bookService";
 
 const BookCatalog = () => {
-  const [books, setBooks] = useState([]);         // Dữ liệu gốc (tất cả sách)
-  const [filteredBooks, setFilteredBooks] = useState([]); // Dữ liệu sau khi lọc
+  const [books, setBooks] = useState([]);      // toàn bộ sách từ API
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🟢 Gọi API 1 lần duy nhất khi load trang
+  // 🟢 Gọi API một lần khi load trang
   useEffect(() => {
     const fetchBooks = async () => {
       setLoading(true);
       try {
-        const res = await getBooks(); // lấy toàn bộ danh sách
-        setBooks(res.data);
-        setFilteredBooks(res.data);   // hiển thị ban đầu
+        const res = await getBooks();
+        setBooks(res.data || []);
       } catch (err) {
+        console.error(err);
         alert("Lỗi khi tải danh sách sách.");
       } finally {
         setLoading(false);
@@ -25,27 +24,31 @@ const BookCatalog = () => {
     fetchBooks();
   }, []);
 
-  // 🟢 Tự động lọc lại khi keyword hoặc category thay đổi
-  useEffect(() => {
-    let filtered = books;
+  // 🧠 Tính danh sách category duy nhất từ DB
+  const categories = useMemo(() => {
+    const unique = new Set();
+    books.forEach((b) => {
+      if (b.category) unique.add(b.category.trim());
+    });
+    return Array.from(unique);
+  }, [books]);
 
-    // Lọc theo keyword (title hoặc author)
-    if (keyword.trim() !== "") {
-      const lowerKeyword = keyword.toLowerCase();
-      filtered = filtered.filter(
-        (b) =>
-          b.title.toLowerCase().includes(lowerKeyword) ||
-          b.author.toLowerCase().includes(lowerKeyword)
-      );
-    }
+  // 🧠 Lọc theo keyword và category (client-side)
+  const filteredBooks = useMemo(() => {
+    const kw = keyword.trim().toLowerCase();
+    const cat = category.trim().toLowerCase();
 
-    // Lọc theo category
-    if (category !== "") {
-      filtered = filtered.filter((b) => b.category === category);
-    }
+    return books.filter((b) => {
+      const title = (b.title || "").toLowerCase();
+      const author = (b.author || "").toLowerCase();
+      const bookCat = (b.category || "").toLowerCase();
 
-    setFilteredBooks(filtered);
-  }, [keyword, category, books]); // Mỗi khi 3 giá trị này thay đổi → tự lọc lại
+      const matchKw = kw ? title.includes(kw) || author.includes(kw) : true;
+      const matchCat = cat ? bookCat === cat : true;
+
+      return matchKw && matchCat;
+    });
+  }, [books, keyword, category]);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -60,15 +63,18 @@ const BookCatalog = () => {
           onChange={(e) => setKeyword(e.target.value)}
           style={{ marginRight: 10 }}
         />
+
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           style={{ marginRight: 10 }}
         >
           <option value="">All Categories</option>
-          <option value="Fiction">Fiction</option>
-          <option value="Science">Science</option>
-          <option value="Programming">Programming</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
       </div>
 
