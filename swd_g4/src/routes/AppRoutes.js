@@ -11,7 +11,7 @@ import BookList from "../pages/BookList";
 import BookForm from "../pages/BookForm";
 import BorrowHistory from "../pages/BorrowHistory";
 import InventoryManagement from "../pages/InventoryManagement";
-
+import Login from "../pages/LoginForm";
 export default function AppRoutes() {
   return (
     <MainLayout>
@@ -20,8 +20,9 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/catalogs" element={<BookCatalog />} />
-
-        {/* Quản lý tài khoản */}
+        <Route path="/login" element={<Login />} />
+        {/* Quản lí tài khoản*/}
+        <Route path="/" element={<Home />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/users/new" element={<UserForm />} />
         <Route path="/users/edit/:id" element={<UserForm />} />
